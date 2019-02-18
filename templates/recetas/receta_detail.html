@@ -1,0 +1,60 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div><br></div>
+    <div class="card row-justify-content" align="center">
+        <!-- Nombre y autor de la receta -->
+        <div class="card-header">
+                <h1>Receta: {{ object.name }}</h1>
+            <div class="col-md-3">
+                <h4>Autor: {{ object.author }}</h4>
+            </div>
+        </div><br>
+        <div class="col-md-3">
+            <h4>Plato: {{ object.plate }}</h4>
+        </div>
+        <!-- Imagen -->
+        <div>
+            <div class="col-md-3">
+                {% if object.image %}   
+                    <img style="height: 200px; width: 100%; display: block;" src="{{ receta.image.url }}">
+                {% else %} 
+                    <img style="height: 200px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22318%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20318%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_158bd1d28ef%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A16pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_158bd1d28ef%22%3E%3Crect%20width%3D%22318%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22129.359375%22%20y%3D%2297.35%22%3EImage%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" alt="Card image">
+                {% endif %}
+            </div>
+        </div><br>
+        <!-- Tutorial e Ingredientes -->
+        <div>
+            <h2> Ingredientes </h2>
+            <p>{{ object.ingredients|linebreaksbr }}</p>
+        </div>
+        <!-- Tutorial -->
+        <h1>Cómo preparar:</h1>
+        <div class="col-md-12">
+            <p align="left">{{ object.instructions|linebreaksbr }}</p>
+        </div>
+        <!-- Fin Tutorial -->
+        <div class=" col-md-4">
+            <a href="{% url 'receta:list_recetas' %}" class="btn btn-info" >Volver al Listado de Recetas</a>
+        </div><br>
+    </div><br>
+    <div class="card">
+        <div class="card-header">
+            <h3>Comentarios</h3>
+        </div>
+        <a class="btn btn-success" href="#">Añadir comentario</a>
+        {% for comment in comments %}
+        <div class="card-body">
+            <div class="date">{{ comment.created_at }}</div>
+            <strong>{{ comment.author }}</strong>
+            <p>{{ comment.text|linebreaks }}</p>
+        </div>
+        {% empty %}
+        <div class="card-body">
+            <p>No hay comentarios</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

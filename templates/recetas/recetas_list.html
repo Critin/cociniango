@@ -1,0 +1,120 @@
+{% extends 'base/base.html' %}
+<!-- Barra de navegación -->
+{% block header %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="{% url 'receta:index_receta' %}">Cociniango</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarColor01">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Recetas <span class="sr-only">(current)</span></a>
+                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 40px, 0px);">
+                    <a class="dropdown-item" href="{% url 'receta:list_recetas' %}">Lista de Recetas</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'receta:new_receta' %}">Añadir Nueva Receta</a>
+                </div>
+            </li>
+            <!-- {% if not request.user.is_authenticated %} -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'registration:registration' %}">Registrarse</a>
+            </li>
+            <!-- {% else %} -->
+            <li class="nav-item active dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido {{ user.first_name }} <span class="sr-only">(current)</span></a>
+                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 40px, 0px);">
+                    <a class="dropdown-item" href="{% url 'registration:profile' user.id %}">Perfil</a>
+                    {% if user.is_superuser%}
+                    <a class="dropdown-item" href="/admin">Panel de Administración</a>
+                    {% endif %}
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a>
+                </div>
+            </li>
+            <!-- {% endif %} -->
+          </ul>
+          <form class="form-inline my-2 my-lg-0" method="POST" action="{% url 'receta:filtro' %}">
+            {% csrf_token %}
+            <input class="form-control mr-sm-2" type="text" name="filtro" placeholder="¡Busca una receta!">
+            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+          </form>
+        </div>
+    </nav>
+{% endblock %}
+
+<!-- Listado de recetas -->
+
+{% block content %}
+<div class="container-fluid">
+    <div><br></div>
+    <h1 align="center">Lista de Recetas</h1><br>
+    {% if object_list %}
+    <div class="row">
+    {% for receta in object_list %}
+    <div class="col-md-3">
+        <div class="card mb-3">
+            <h3 class="card-header">{{ receta.name }}</h3>
+            <div class="card-body">
+                {% if receta.author %}
+                    <h5 class="card-title">{{ receta.author.first_name }}</h5>
+                {% else %}
+                    <h5 class="card-title">Cociniango</h5>
+                {% endif %}
+            <h6 class="card-subtitle text-muted">Plato: {{ receta.plate }}</h6>
+            </div>
+            {% if receta.image %}   
+                <img style="height: 200px; width: 100%; display: block;" src="{{ receta.image.url }}">
+            {% else %} 
+                <img style="height: 200px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22318%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20318%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_158bd1d28ef%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A16pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_158bd1d28ef%22%3E%3Crect%20width%3D%22318%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22129.359375%22%20y%3D%2297.35%22%3EImage%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" alt="Card image">
+            {% endif %}
+            <div class="card-body">
+                <h4>Descripción del plato:</h4>
+                <p class="card-text">{{ receta.description }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <h5>Publicado el:</h5>
+                {{ receta.created_at }}
+            </li>
+            <li class="list-group-item">
+                <h5>Última actualización:</h5>
+                {{ receta.updated_at }}
+            </li>
+            </ul>
+            <div class="card-body">
+            <a class="btn btn-primary btn-block" href="{% url 'receta:detail_receta' receta.id %}">Preparar</a>
+            {% if user.is_staff %}
+            <a class="btn btn-secondary btn-block" href="{% url 'receta:edit_receta' receta.id %}">Editar</a>
+            {% elif receta.author %}
+            <a class="btn btn-secondary btn-block" href="{% url 'receta:edit_receta' receta.id %}">Editar</a>
+            {% else %}
+            <button class="btn btn-info btn-block">Solo puede Editar la receta el autor o el administrador</button>
+            {% endif %}
+            </div>
+            <div class="card-footer text-muted">
+                {% if user.is_staff %}
+                <a class="btn btn-danger btn-block" href="{% url 'receta:delete_receta' receta.id %}">Borrar</a>
+                {% elif receta.author %}
+                <a class="btn btn-danger btn-block" href="{% url 'receta:delete_receta' receta.id %}">Borrar</a>
+                {% else %}
+                <button class="btn btn-info btn-block">Solo puede Borrar la receta el autor o el administrador</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center">
+        <h2>No hay recetas en este momento</h2>
+        <a class="btn btn-primary" href="{% url 'receta:new_receta' %}">¡Publica una aquí!</a>
+    </div>
+    {%  endif %}
+</div>
+
+{% endblock %}

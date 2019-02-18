@@ -1,0 +1,93 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div><br></div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Formulario de Registro</div>
+
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label text-md-right">Nombre</label>
+
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="first_name" required autofocus>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label text-md-right">Apellidos</label>
+
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="last_name" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label text-md-right">Nombre de Usuario</label>
+
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="username" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label text-md-right">E-Mail</label>
+
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="email" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label text-md-right">Género</label>
+
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="gender" disabled="">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label text-md-right">Edad</label>
+
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="age" disabled="">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label text-md-right">Contraseña</label>
+
+                            <div class="col-md-6">
+                                <input type="password" class="form-control" name="password1" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label text-md-right">Confirmar Contraseña</label>
+
+                            <div class="col-md-6">
+                                <input type="password" class="form-control" name="password2" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-0">
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-secondary">
+                                    Registrarse
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
